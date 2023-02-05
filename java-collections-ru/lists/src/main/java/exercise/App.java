@@ -14,11 +14,9 @@ public class App {
         List<String> listLetters = new ArrayList<>();
         Collections.addAll(listLetters, arrayLetters);
 
-        List<String> listWord = Arrays.asList(arrayWord);
-
         int count = 0;
-        for (int i = 0; i < listWord.size(); i++)  {
-            String wordLetter = listWord.get(i);
+        for (int i = 0; i < arrayWord.length; i++)  {
+            String wordLetter = arrayWord[i];
             for (int j = 0; j < listLetters.size(); j++) {
                 String letter = listLetters.get(j);
                 if (wordLetter.equalsIgnoreCase(letter)) {
