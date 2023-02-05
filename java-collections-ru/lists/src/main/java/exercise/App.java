@@ -1,19 +1,28 @@
 package exercise;
 
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 // BEGIN
 public class App {
     public static boolean scrabble(String letters, String word) {
-        word = word.toLowerCase();
-        char[] arrayLetters = letters.toCharArray();
-        char[] arrayWord = word.toCharArray();
+        String[] arrayLetters = letters.split("");
+        String[] arrayWord = word.split("");
+
+        List<String> listLetters = new ArrayList<>();
+        Collections.addAll(listLetters, arrayLetters);
+
+        List<String> listWord = Arrays.asList(arrayWord);
+
         int count = 0;
-        for (int i = 0; i < arrayWord.length; i++)  {
-            for (int j = 0; j < arrayLetters.length; j++) {
-                if (arrayWord[i] == arrayLetters[j]) {
-                    arrayLetters[j] = '*';
+        for (int i = 0; i < listWord.size(); i++)  {
+            String wordLetter = listWord.get(i);
+            for (int j = 0; j < listLetters.size(); j++) {
+                String letter = listLetters.get(j);
+                if (wordLetter.equalsIgnoreCase(letter)) {
+                    listLetters.remove(letter);
                     count++;
                     break;
                 }
