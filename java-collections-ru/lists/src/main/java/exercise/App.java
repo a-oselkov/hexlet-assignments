@@ -15,10 +15,8 @@ public class App {
         Collections.addAll(listLetters, arrayLetters);
 
         int count = 0;
-        for (int i = 0; i < arrayWord.length; i++)  {
-            String wordLetter = arrayWord[i];
-            for (int j = 0; j < listLetters.size(); j++) {
-                String letter = listLetters.get(j);
+        for (String wordLetter : arrayWord)  {
+            for (String letter : listLetters) {
                 if (wordLetter.equalsIgnoreCase(letter)) {
                     listLetters.remove(letter);
                     count++;
