@@ -6,28 +6,29 @@ import java.util.stream.Stream;
 
 // BEGIN
 public class App {
-    public static Map<String, String> genDiff(Map<String, Object> firstMap, Map<String, Object> secondMap) {
+    public static Map<String, String> genDiff(Map<String, Object> data1, Map<String, Object> data2) {
         Map<String, String> result = new LinkedHashMap<>();
-        Map<String, Object> newMap = Stream.of(firstMap, secondMap)
+        Map<String, Object> allKeyMap = Stream.of(data1, data2)
                 .flatMap(m -> m.entrySet().stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (k1, k2) -> k1));
-        for (Map.Entry<String, Object> element : newMap.entrySet()) {
-            var key = element.getKey();
-            var value = element.getValue();
-            if (firstMap.containsKey(key) && !secondMap.containsKey(key)) {
+        for (Map.Entry<String, Object> element : allKeyMap.entrySet()) {
+            String key = element.getKey();
+            Object value = element.getValue();
+            if (data1.containsKey(key) && !data2.containsKey(key)) {
                 result.put(key, "deleted");
             }
-            if (!firstMap.containsKey(key) && secondMap.containsKey(key)) {
+            if (!data1.containsKey(key) && data2.containsKey(key)) {
                 result.put(key, "added");
             }
-            if (firstMap.containsKey(key) && secondMap.containsKey(key) && firstMap.get(key).equals(secondMap.get(key))) {
+            if (data1.containsKey(key) && data2.containsKey(key) && data1.get(key).equals(data2.get(key))) {
                 result.put(key, "unchanged");
             }
-            if (firstMap.containsKey(key) && secondMap.containsKey(key) && !value.equals(secondMap.get(key))) {
+            if (data1.containsKey(key) && data2.containsKey(key) && !value.equals(data2.get(key))) {
                 result.put(key, "changed");
             }
         }
-        return result;
+        Map<String, String> sortMap = new TreeMap<>(result);
+        return sortMap;
     }
 
     public static void main(String[] args) {
