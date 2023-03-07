@@ -2,22 +2,20 @@ package exercise;
 
 // BEGIN
 public class Segment {
-    Point begin;
-    Point end;
+    Point beginPoint;
+    Point endPoint;
 
     public Segment(Point begin, Point end) {
-        this.begin = begin;
-        this.end = end;
+        this.beginPoint = begin;
+        this.endPoint = end;
     }
     public Point getBeginPoint() {
-        return begin;
+        return beginPoint;
     }
     public Point getEndPoint() {
-        return end;
+        return endPoint;
     }
     public Point getMidPoint() {
-        Point beginPoint = getBeginPoint();
-        Point endPoint = getEndPoint();
         int midX = (beginPoint.getX() + endPoint.getX()) / 2;
         int midY = (beginPoint.getY() + endPoint.getY()) / 2;
         return new Point(midX, midY);
