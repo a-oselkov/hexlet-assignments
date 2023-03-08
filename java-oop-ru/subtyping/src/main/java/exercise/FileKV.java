@@ -1,6 +1,9 @@
 package exercise;
 
 // BEGIN
+import java.util.HashMap;
+import java.util.Map;
+
 public class FileKV implements KeyValueStorage{
 
     private String path;

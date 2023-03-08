@@ -8,7 +8,11 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import com.fasterxml.jackson.databind.ObjectMapper;
 // BEGIN
+import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
 // END
 
 
