@@ -6,7 +6,7 @@ import exercise.connections.Connection;
 import exercise.connections.Disconnected;
 
 // BEGIN
-public class TcpConnection implements Connection{
+public class TcpConnection{
     private String ipAddress;
     private int port;
     private Connection status;
@@ -34,24 +34,21 @@ public class TcpConnection implements Connection{
         this.buffer.add(data);
     }
 
-    @Override
-    public String getCurrentState() {   
+    public String getCurrentState() {
         return this.status.getCurrentState();
     }
 
-    @Override
     public void connect() {
         this.status.connect();
     }
 
-    @Override
     public void disconnect() {
         this.status.disconnect();
     }
 
-    @Override
     public void write(String data) {
         this.status.write(data);
     }
 }
+
 // END
