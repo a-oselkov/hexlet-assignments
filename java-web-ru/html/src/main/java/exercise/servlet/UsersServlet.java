@@ -23,41 +23,10 @@ import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 
 public class UsersServlet extends HttpServlet {
 
-    public static final String htmlTable = """
-            <html>
-            <head>
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-            </head>
-            <style type="text/css"> 
-                table, th, td {
-                    margin: auto;
-                    text-align: center;
-                    width: 600px;
-                    border: 1px solid black;
-                    border-collapse: collapse;
-                }
-                TH {
-                    background: #fc0;
-                    height: 40px;
-                    vertical-align: center;
-                    padding: 0;
-                    }
-            </style>
-            <body>
-            <table>
-                <tbody>
-                    %s
-                </tbody>
-            <table>
-            </body>
-            </html>
-            """;
-
-
     @Override
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response)
-                throws IOException, ServletException {
+            throws IOException, ServletException {
 
         String pathInfo = request.getPathInfo();
 
@@ -75,7 +44,7 @@ public class UsersServlet extends HttpServlet {
 
     private static List getUsers() throws JsonProcessingException, IOException {
         // BEGIN
-        Path filePath = Paths.get("src", "main", "resources", "users.json")
+        Path filePath = Paths.get("users.json")
                 .toAbsolutePath().normalize();
 
         String data = Files.readString(filePath);
@@ -86,80 +55,104 @@ public class UsersServlet extends HttpServlet {
     }
 
     private static void showUsers(HttpServletRequest request,
-                          HttpServletResponse response)
-                throws IOException {
-        PrintWriter pw = response.getWriter();
+                                  HttpServletResponse response)
+            throws IOException {
 
         // BEGIN
-        List<Map<String, String>> users = getUsers();
-        StringBuilder userRows = new StringBuilder("");
-        userRows.append("""
-                <thead>
-                    <tr>
-                        <th colspan="2">List of users</th>
-                    </tr>
-                </thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Users full Name</th>
-                </tr>
-                """);
+        List<Map> users = getUsers();
 
-        users.stream().forEach(user -> {
+        StringBuilder body = new StringBuilder();
+        body.append("""
+            <!DOCTYPE html>
+            <html lang=\"ru\">
+                <head>
+                    <meta charset=\"UTF-8\">
+                    <title>Example application | Users</title>
+                    <link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css\"
+                          rel=\"stylesheet\"
+                          integrity=\"sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We\"
+                          crossorigin=\"anonymous\">
+                </head>
+                <body>
+                    <div class=\"container\">
+                        <a href=\"/\">Главная</a>
+                        <table>
+            """);
+
+        for (Map<String, String> user : users) {
+            String id = user.get("id");
             String fullName = user.get("firstName") + " " + user.get("lastName");
-            userRows.append("""
-            <tr>
-                <td>%s</td>
-                <td><a href=\"/users/%s\">%s</a></td>
-            </tr>
-            """.formatted(user.get("id"), user.get("id"), fullName));
-        });
 
-        pw.println(htmlTable.formatted(userRows));
+            body.append("<tr>");
+            body.append("<td>" + id + "</td>");
+            body.append("<td><a href=\"/users/" + id + "\">" + fullName + "</a></td>");
+            body.append("</tr>");
+        }
+
+        body.append("""
+                        </table>
+                    </div>
+                </body>
+            </html>
+            """);
+
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        out.println(body.toString());
         // END
     }
 
     private void showUser(HttpServletRequest request,
-                         HttpServletResponse response,
-                         String id)
-                 throws IOException {
+                          HttpServletResponse response,
+                          String id)
+            throws IOException {
 
         // BEGIN
-        PrintWriter pw = response.getWriter();
-        List<Map<String, String>> users = getUsers();
+        List<Map> users = getUsers();
 
-        StringBuilder userRows = new StringBuilder("");
-        userRows.append("""
-                <thead>
-                    <tr>
-                        <th colspan="2">Users Data</th>
-                    </tr>
-                </thead>
-                <tr>
-                    <th>Param</th>
-                    <th>Value</th>
-                </tr>
-                """);
+        Map<String, String> user = users
+                .stream()
+                .filter(u -> u.get("id").equals(id))
+                .findAny()
+                .orElse(null);
 
-        if (users.stream().noneMatch(i -> i.containsValue(id))) {
-            response.sendError(SC_NOT_FOUND, "Not found");
-        } else {
-            users.stream()
-                    .forEach(m -> {
-                        if (m.containsValue(id)) {
-                            for (String data : m.keySet()) {
-                                userRows.append("""
-                             <tr>
-                                <td>%s</td>
-                                <td>%s</td>
-                            </tr>
-                            """.formatted(data, m.get(data)));
-                            }
-                        }
-                    });
+        if (user == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
         }
 
-        pw.println(htmlTable.formatted(userRows));
+        StringBuilder body = new StringBuilder();
+        body.append("""
+            <!DOCTYPE html>
+            <html lang=\"ru\">
+                <head>
+                    <meta charset=\"UTF-8\">
+                    <title>Example application | User</title>
+                    <link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css\"
+                          rel=\"stylesheet\"
+                          integrity=\"sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We\"
+                          crossorigin=\"anonymous\">
+                </head>
+                <body>
+                    <div class=\"container\">
+                        <a href=\"/users\">Пользователи</a>
+            """);
+
+        for (Map.Entry<String, String> entry : user.entrySet()) {
+            body.append("<div>");
+            body.append(entry.getKey() + ": " + entry.getValue());
+            body.append("</div>");
+        }
+
+        body.append("""
+                    </div>
+                </body>
+            </html>
+            """);
+
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        out.println(body.toString());
         // END
     }
 }
