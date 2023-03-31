@@ -2,7 +2,7 @@ FROM gradle:8.0.1-jdk17
 
 WORKDIR java-web-ru/deploy
 
-COPY /deploy .
+COPY java-web-ru/deploy .
 
 RUN gradle installDist
 
