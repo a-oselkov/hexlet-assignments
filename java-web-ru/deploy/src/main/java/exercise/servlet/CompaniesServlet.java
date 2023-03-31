@@ -23,10 +23,10 @@ public class CompaniesServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         String search = request.getParameter("search");
-        String qstr = request.getQueryString();
+        
         boolean isFound = false;
 
-        if (qstr == null || !qstr.contains("search") || search.equals("")) {
+        if (search == null || search.equals("")) {
             companies.forEach(out::println);
         } else {
             for (String company : companies) {
