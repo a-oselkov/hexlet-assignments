@@ -1,6 +1,6 @@
 FROM gradle:8.0.1-jdk17
 
-WORKDIR /deploy
+WORKDIR java-web-ru/deploy
 
 COPY /deploy .
 
