@@ -25,7 +25,10 @@
                      <col style="background-color:LightCyan">
                      <col style="background:Khaki">
                 </colgroup>
-                <h2>Пользователь будет удален</h2>
+
+                <tr>
+                    <td colspan=2 align=center style="background-color:yellow">Пользователь</td>
+                </tr>
                     <c:forEach var="field" items="${user.keySet()}">
                                             <tr>
                                                 <td>${field}</td>
@@ -33,6 +36,7 @@
                                             </tr>
                                     </c:forEach>
             </table>
+            <h3>Пользователь будет удален</h3>
             <form method="post" action='/users/delete?id=${user.get("id")}'>
                  <button type="submit" class="btn btn-danger">Удалить</button>
             </form>

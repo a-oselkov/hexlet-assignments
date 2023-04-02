@@ -15,16 +15,17 @@
         <div class="container">
             <a href="/users">Все пользователи</a><br>
             <!-- BEGIN -->
+            <h3> Изменить данные пользователя </h3>
             <font color="red">${error}</font><br>
-            <form method = "post" action = "/users/edit">
-                <br>
+            <form method = "post" action = "/users/edit?id=${user.get("id")}">
+
                 Имя  <input name="firstName"  value="${user.get("firstName")}"/><br>
                 <br>
                 Фамилия  <input name="lastName" placeholder="Введите фамилию" value="${user.get("lastName")}"/><br>
                 <br>
                 E-mail  <input name="email" placeholder="Введите email" value="${user.get("email")}"/><br>
                 <br>
-                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <button type="submit" class="btn btn-primary">Изменить</button>
                 </form>
             <!-- END -->
         </div>

@@ -19,11 +19,11 @@
             <font color="red">${error}</font><br>
             <form method="post" action='/users/new'>
 
-                Имя  <input name = "firstName" placeholder="Введите имя" value="${firstName}" /><br>
+                Имя  <input name = "firstName" placeholder="Введите имя" value="${user.get("firstName")}" /><br>
                 <br>
-                Фамилия  <input name = "lastName" placeholder="Введите фамилию" value="${lastName}" /><br>
+                Фамилия  <input name = "lastName" placeholder="Введите фамилию" value="${user.get("lastName")}" /><br>
                 <br>
-                E-mail  <input name = "email" placeholder="Введите email" value="${email}" /><br>
+                E-mail  <input name = "email" placeholder="Введите email" value="${user.get("email")}" /><br>
                 <br>
                 <button type="submit" class="btn btn-primary">Добавить</button>
             </form>

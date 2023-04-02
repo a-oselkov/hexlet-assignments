@@ -145,21 +145,22 @@ public class UsersServlet extends HttpServlet {
         String email = request.getParameter("email");
         String id = getNextId();
 
+        Map<String, String> user = new HashMap<>();
+
+        user.put("firstName", firstName);
+        user.put("lastName", lastName);
+        user.put("email", email);
+        user.put("id", id);
+
         if (!firstName.isEmpty() && !lastName.isEmpty() && !email.isEmpty()) {
-            Map<String, String> user = new HashMap<>();
-            user.put("firstName", firstName);
-            user.put("lastName", lastName);
-            user.put("email", email);
-            user.put("id", id);
+
             users.add(user);
             response.sendRedirect("/users");
         } else {
             // Если данные не прошли валидацию выполняем редирект с кодом 422 на страницу создания новой компании
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("/new.jsp");
             // Передаём туда введенные данные компании
-            request.setAttribute("firstName", firstName);
-            request.setAttribute("lastName", lastName);
-            request.setAttribute("email", email);
+            request.setAttribute("user", user);
             // И сообщение об ошибке
             request.setAttribute("error", "Заполните все поля");
             response.setStatus(422);
@@ -197,31 +198,32 @@ public class UsersServlet extends HttpServlet {
 
         Map<String, String> user = getUserById(id);
 
+
         if (user == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
 
         // BEGIN
+        Map<String, String> updatedUserData = new HashMap<>();
+
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
         String email = request.getParameter("email");
 
+        updatedUserData.put("firstName", firstName);
+        updatedUserData.put("lastName", lastName);
+        updatedUserData.put("email", email);
+        updatedUserData.put("id", id);
+
         if (!firstName.isEmpty() && !lastName.isEmpty() && !email.isEmpty()) {
-            user.put("firstName", firstName);
-            user.put("lastName", lastName);
-            user.put("email", email);
-            user.put("id", id);
-            users.remove(user);
-            users.add(user);
+            user.putAll(updatedUserData);
             response.sendRedirect("/users");
         } else {
             // Если данные не прошли валидацию выполняем редирект с кодом 422 на страницу создания новой компании
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("/edit.jsp");
             // Передаём туда введенные данные компании
-            request.setAttribute("firstName", firstName);
-            request.setAttribute("lastName", lastName);
-            request.setAttribute("email", email);
+            request.setAttribute("user", updatedUserData);
             // И сообщение об ошибке
             request.setAttribute("error", "Заполните все поля");
             response.setStatus(422);
