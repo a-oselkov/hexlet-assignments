@@ -81,12 +81,11 @@ public class SessionServlet extends HttpServlet {
         // END
 
         if (user == null || !user.get("password").equals(password)) {
-
+            LOGGER.log(Level.INFO, "Пользователь " + user.get("email") + " не залогинился");
             request.setAttribute("user", userData);
             session.setAttribute("flash", "Неверные логин или пароль");
             response.setStatus(422);
             TemplateEngineUtil.render("session/login.html", request, response);
-            LOGGER.log(Level.INFO, "Пользователь " + user.get("email") + " не залогинился");
             return;
         }
         LOGGER.log(Level.INFO, "Пользователь " + user.get("email") + " залогинился");
