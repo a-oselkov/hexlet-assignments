@@ -68,7 +68,11 @@ public class ArticlesServlet extends HttpServlet {
 
         switch (action) {
             case "list":
-                showArticles(request, response);
+                try {
+                    showArticles(request, response);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
                 break;
             case "new":
                 newArticle(request, response);
@@ -113,13 +117,14 @@ public class ArticlesServlet extends HttpServlet {
 
     private void showArticles(HttpServletRequest request,
                               HttpServletResponse response)
-            throws IOException, ServletException {
+            throws IOException, ServletException, SQLException {
 
         ServletContext context = request.getServletContext();
         Connection connection = (Connection) context.getAttribute("dbConnection");
 
         List<Map<String, String>> articles = new ArrayList<>();
 
+        int lastPage;
         int articlesPerPage = 10;
         String page = request.getParameter("page");
         int normalizedPage = page == null ? 1 : Integer.parseInt(page);
@@ -143,15 +148,18 @@ public class ArticlesServlet extends HttpServlet {
                         )
                 );
             }
+
         } catch (SQLException e) {
             // Если в процессе работы с базой было выброшено исключение SQLException,
             // нужно отправить в ответе код ошибки 500
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
         }
-
+        lastPage = getLastPage(connection) / articlesPerPage;
+        lastPage = getLastPage(connection) % articlesPerPage == 0 ? lastPage : lastPage + 1;
         request.setAttribute("articles", articles);
         request.setAttribute("page", normalizedPage);
+        request.setAttribute("lastPage", lastPage);
         TemplateEngineUtil.render("articles/index.html", request, response);
     }
 
@@ -318,5 +326,15 @@ public class ArticlesServlet extends HttpServlet {
 
         session.setAttribute("flash", "Статья успешно удалена");
         response.sendRedirect("/articles");
+    }
+
+    private int getLastPage(Connection connection) throws SQLException {
+        String query = "SELECT COUNT(*) AS recordCount FROM articles";
+
+        PreparedStatement statement = connection.prepareStatement(query);
+
+        ResultSet rs = statement.executeQuery();
+        rs.next();
+        return rs.getInt("recordCount");
     }
 }
