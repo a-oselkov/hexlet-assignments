@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layouts/application.html}">
+
+<head>
+  <title>Show article</title>
+</head>
+<section layout:fragment="content">
+  <div class="card" th:object="${article}">
+    <ul class="list-group list-group-flush">
+      <h4 th:text="*{title}"></h4>
+      <br>
+      <p th:text="*{body}"></p>
+
+
+      <!-- BEGIN -->
+      <br>
+      <th>Category: </th>
+      <th th:text="*{name}" th:object="${category}"></th>
+
+      <!-- END -->
+    </ul>
+  </div>
+
+</section>
