@@ -87,9 +87,9 @@ public final class ArticleController {
         long categoryId = ctx.formParamAsClass("categoryId", Long.class).getOrDefault(null);
         long id = ctx.pathParamAsClass("id", Long.class).getOrDefault(null);
 
-        Article article = new QArticle()
-                .id.equalTo(id)
-                .findOne();
+//        Article article = new QArticle()
+//                .id.equalTo(id)
+//                .findOne();
 
         new QArticle()
                 .id.equalTo(id)
@@ -100,8 +100,8 @@ public final class ArticleController {
                 .update();
 
 
-        ctx.attribute("article", article);
-        ctx.render("articles/edit.html");
+//        ctx.attribute("article", article);
+//        ctx.render("articles/edit.html");
         ctx.sessionAttribute("flash", "Статья успешно обновлена");
         ctx.redirect("/articles");
         // END
@@ -124,16 +124,20 @@ public final class ArticleController {
         // BEGIN
         long id = ctx.pathParamAsClass("id", Long.class).getOrDefault(null);
 
-        Article article = new QArticle()
-                .id.equalTo(id)
-                .findOne();
+//        Article article = new QArticle()
+//                .id.equalTo(id)
+//                .findOne();
+//        new QArticle()
+//                .delete();
         new QArticle()
+                .id.equalTo(id)
                 .delete();
 
-        ctx.attribute("article", article);
-        ctx.render("articles/delete.html");
-        //ctx.sessionAttribute("flash", "Статья " + article.getTitle() + " успешно удалена");
+        ctx.sessionAttribute("flash", "Статья успешно удалена");
         ctx.redirect("/articles");
+//        ctx.attribute("article", article);
+//        ctx.sessionAttribute("flash", "Статья " + article.getTitle() + " успешно удалена");
+//        ctx.redirect("/articles");
         // END
     };
 }
