@@ -80,7 +80,7 @@ class AppTest {
 
     // BEGIN
     @Test
-    void testCreateUser() {
+    void testCreateUserPositive() {
 
         // Выполняем POST запрос при помощи агента Unirest
         HttpResponse<String> responsePost = Unirest
@@ -106,17 +106,51 @@ class AppTest {
 
         assertThat(actualUser).isNotNull();
 
-
         // И что её данные соответствуют переданным
         assertThat(actualUser.getFirstName()).isEqualTo("Ivan");
         assertThat(actualUser.getLastName()).isEqualTo("Ivanov");
         assertThat(actualUser.getEmail()).isEqualTo("1@1.com");
         assertThat(actualUser.getPassword()).isEqualTo("12345");
 
-        
+
 
         // Можно проверить, что такой компании нет в БД
         //assertThat(actualUser).isNull();
         // END
+    }
+
+    @Test
+    void testNegative() {
+
+        String firstName = "";
+        String lastName = "";
+        String email = "1.ru";
+        String password = "12a";
+
+        HttpResponse<String> responsePost = Unirest
+                .post(baseUrl + "/users")
+                .field("firstName", firstName)
+                .field("lastName", lastName)
+                .field("email", email)
+                .field("password", password)
+                .asString();
+
+        assertThat(responsePost.getStatus()).isEqualTo(422);
+
+        User actualUser = new QUser()
+                .lastName.equalTo(lastName)
+                .findOne();
+
+        assertThat(actualUser).isNull();
+
+        String content = responsePost.getBody();
+
+        assertThat(content).contains("1.ru");
+        assertThat(content).contains("12a");
+        assertThat(content).contains("Имя не должно быть пустым");
+        assertThat(content).contains("Фамилия не должна быть пустой");
+        assertThat(content).contains("Должно быть валидным email");
+        assertThat(content).contains("Пароль должен содержать не менее 4 символов");
+        assertThat(content).contains("Пароль должен содержать не менее 4 символов");
     }
 }
