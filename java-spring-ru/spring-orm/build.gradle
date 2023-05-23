@@ -10,10 +10,6 @@ group = 'exercise'
 
 repositories {
   mavenCentral()
-  google()
-  maven {
-    url "https://repo1.maven.org/maven2/"
-  }
 }
 
 dependencies {
@@ -30,7 +26,6 @@ dependencies {
   liquibaseRuntime 'org.springframework.boot:spring-boot-starter-data-jpa'
   liquibaseRuntime 'org.liquibase.ext:liquibase-hibernate5:3.6'
   liquibaseRuntime sourceSets.main.output
-
 }
 
 test {
@@ -41,7 +36,7 @@ testlogger {
   showStandardStreams = true
 }
 
-// Настраиваем таску diffChangeLog таким образом,
+// Настраиваем таскуdiffChangeLog таким образом,
 // чтобы миграция генерировалась при каждом изменении в модели
 diffChangeLog {
   dependsOn compileJava
@@ -63,11 +58,11 @@ liquibase {
       // Это модели
       // Указываем пакет, в котором расположены модели
       referenceUrl 'hibernate:spring:exercise.model' +
-              // Указываем диалект
-              '?dialect=org.hibernate.dialect.H2Dialect' +
-              // Указываем правила именования таблиц и столбцов,
-              // чтобы они соответствовали правилам Spring
-              '&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy'
+                    // Указываем диалект
+                   '?dialect=org.hibernate.dialect.H2Dialect' +
+                   // Указываем правила именования таблиц и столбцов,
+                   // чтобы они соответствовали правилам Spring
+                   '&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy'
     }
   }
 }

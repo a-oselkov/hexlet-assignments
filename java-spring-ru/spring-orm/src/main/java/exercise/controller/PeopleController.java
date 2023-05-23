@@ -1,7 +1,6 @@
 package exercise.controller;
 
 import exercise.model.Person;
-import exercise.dto.PersonDto;
 import exercise.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +22,7 @@ public class PeopleController {
 
     @GetMapping(path = "/{id}")
     public Person getPerson(@PathVariable long id) {
-        return personRepository.findById(id).orElseThrow();
+        return this.personRepository.findById(id);
     }
 
     @GetMapping(path = "")
@@ -41,7 +40,7 @@ public class PeopleController {
     public void deletePerson(@PathVariable long id) {
         this.personRepository.deleteById(id);
     }
-
+    
     @PatchMapping(path = "/{id}")
     public void patchPerson(@RequestBody Person person, @PathVariable long id) {
         person.setId(id);
